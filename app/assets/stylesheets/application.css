@@ -1,0 +1,61 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *= require jquery-ui
+ *= require_tree .
+ *= require_self
+ */
+// Place all the styles related to the random_quotes controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.body {
+	background: rgb(182, 255, 255);
+}
+
+.centered {
+	  font-family: "Dancing Script";
+	  height: 400px;
+	  position: fixed;
+	  top: 35%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+}
+
+.quote-div{
+	height: 200px;
+	width: 400px;
+    margin: 0 auto;
+    border-radius: 5px;
+    display: flex;
+  	align-items: center;
+  	justify-content: center;
+    
+}
+.social-buttons{
+	height: 200px;
+	display: inline-flex;
+	width: 600px;
+}
+.img-div {
+	display: flex;
+  	align-items: center;
+  	justify-content: center;
+	width: 200px;
+}
+
+.tweet, .quote, .auto {
+	cursor: pointer;
+}
+
+.auto {
+	width: 20px;
+}
