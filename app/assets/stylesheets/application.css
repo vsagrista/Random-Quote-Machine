@@ -21,6 +21,8 @@
 	background: rgb(182, 255, 255);
 }
 
+
+
 .centered {
 	  font-family: "Dancing Script";
 	  height: 400px;
@@ -39,14 +41,17 @@
   	align-items: center;
   	justify-content: center;
   	font-size: auto;
-  	display: block;
-    
+  	display: block;   
+  	
 }
+
 .social-buttons{
 	height: 200px;
 	display: inline-flex;
 	width: 600px;
+
 }
+
 .img-div {
 	display: flex;
   	align-items: center;
@@ -60,4 +65,17 @@
 
 .auto {
 	width: 20px;
+}
+
+.clock {
+	border-radius: 25px;
+}
+
+
+.animate {
+animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+ 100% {transform:rotate(360deg);}
 }

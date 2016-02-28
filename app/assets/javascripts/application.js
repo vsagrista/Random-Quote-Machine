@@ -19,6 +19,7 @@
 
 
 $(function () {	
+	
 	function getQuotes() {
 		$.getJSON("http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=40", 
 			function(response) {
@@ -28,12 +29,13 @@ $(function () {
 	}
 	
 	function printQuote (quotes) {
-		var randomQuote = quotes[Math.floor(Math.random() * quotes.length)]
+		var randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 		var quote = randomQuote.content.slice(3,randomQuote.content.length-5);  // the string comes with html <p> tags 
-		var author = randomQuote.title 
+		var author = randomQuote.title;
 		if(quote.indexOf('&#82') != -1){  // Some quotes have unwanted characters
 			quote = cleanQuoteFromCharSigns(quote);
 		}
+		$('.clock').removeClass('animate');
 		$('#quote').text(quote);
 		$('#author').text(author);
 	}
@@ -63,11 +65,38 @@ $(function () {
 		$domElement.animate({backgroundColor : background}, 500);
 		$domElement.animate({'border' : background}, 500);
 	}
-	
-	$('#quote-btn').on('click', function(){
-		getQuotes();
-		var backgroundColors = Array.apply(null,Array(3)).map(function(number){return Math.floor(Math.random() * 800)})
+
+	function makeAppRun () {
+		$('.clock').addClass('animate');
+		setTimeout(function () {getQuotes()},2000);
+		var backgroundColors = Array.apply(null,Array(3)).map(function(number){return Math.floor(Math.random() * 800)});
 			assignColors($('body'), backgroundColors);
-			assignColors($('.color-change'), backgroundColors);
+			assignColors($('.color-change'), backgroundColors);	
+	}
+	function hide ($domElement) {
+		$domElement.addClass('hidden');
+	}
+
+	function show ($domElement) {
+		$domElement.removeClass('hidden');
+	}
+
+	var autoPilot;
+
+	$('#quote-btn').on('click', function() {
+		clearInterval(autoPilot);
+		hide($('#auto-stop'));
+		show($('#auto'));
+		makeAppRun();
+	});
+	$('#auto').on('click', function() {
+		autoPilot = setInterval(makeAppRun, 4000);
+		hide($('#auto'));
+		show($('#auto-stop'));
+	});
+	$('#auto-stop').on('click', function() {
+		clearInterval(autoPilot);
+		hide($('#auto-stop'));
+		show($('#auto'));
 	});
 })();
