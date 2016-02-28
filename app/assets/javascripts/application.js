@@ -18,33 +18,56 @@
 //= require_tree .
 
 
-$(document).ready(function () {
-	$.getJSON("http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=40", 
-		function(a) {
-			console.log(a)
-		}
-	);
+$(function () {	
+	function getQuotes() {
+		$.getJSON("http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=40", 
+			function(response) {
+				printQuote(response);
+			}
+		);
+	}
 	
-	function printQuote (quote) {
-		$('#quote').text()
+	function printQuote (quotes) {
+		var randomQuote = quotes[Math.floor(Math.random() * quotes.length)]
+		var quote = randomQuote.content.slice(3,randomQuote.content.length-5);  // the string comes with html <p> tags 
+		var author = randomQuote.title 
+		if(quote.indexOf('&#82') != -1){  // Some quotes have unwanted characters
+			quote = cleanQuoteFromCharSigns(quote);
+		}
+		$('#quote').text(quote);
+		$('#author').text(author);
 	}
-	function printError () {
-		// body...
+
+	function cleanQuoteFromCharSigns(quote) { // removes the unwanted characters returned by the API
+		var firstChunk = quote.split('&#82')[0];
+		var secondChunk = quote.split('&#82')[1].split(';');
+		switch (secondChunk[0]) {
+			case '11':
+				secondChunk.shift();
+				return firstChunk + ' ' + secondChunk; 
+			case '17':
+				secondChunk.shift();
+				return firstChunk + "'" + secondChunk; 
+			case '30':
+				secondChunk.shift();
+				return firstChunk + '' + secondChunk; 
+		}		
 	}
+
 	function assignColors ($domElement, colors) {
-		background = 'rgb(';
-			//colorChar = cssProp === 'border' ? 300 : 50
+		var background = 'rgb(';
 		for(var i = 0; i < colors.length; i++){
 			background += (colors[i]+50) + ',';
 		}
 		background = background.slice(0, -1) + ')';
-		//$domElement.animate({backgroundColor: background }, 2000);
 		$domElement.animate({backgroundColor : background}, 500);
 		$domElement.animate({'border' : background}, 500);
 	}
+	
 	$('#quote-btn').on('click', function(){
+		getQuotes();
 		var backgroundColors = Array.apply(null,Array(3)).map(function(number){return Math.floor(Math.random() * 800)})
 			assignColors($('body'), backgroundColors);
 			assignColors($('.color-change'), backgroundColors);
 	});
-});
+})();

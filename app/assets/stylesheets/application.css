@@ -31,13 +31,15 @@
 }
 
 .quote-div{
-	height: 200px;
-	width: 400px;
+	height: auto;
+    width: auto;
     margin: 0 auto;
     border-radius: 5px;
     display: flex;
   	align-items: center;
   	justify-content: center;
+  	font-size: auto;
+  	display: block;
     
 }
 .social-buttons{
