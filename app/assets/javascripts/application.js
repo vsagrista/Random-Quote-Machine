@@ -17,7 +17,6 @@
 //= require turbolinks
 //= require_tree .
 
-
 $(function () {	
 	
 	function getQuotes() {
@@ -73,6 +72,7 @@ $(function () {
 			assignColors($('body'), backgroundColors);
 			assignColors($('.color-change'), backgroundColors);	
 	}
+
 	function hide ($domElement) {
 		$domElement.addClass('hidden');
 	}
@@ -89,14 +89,49 @@ $(function () {
 		show($('#auto'));
 		makeAppRun();
 	});
+
 	$('#auto').on('click', function() {
 		autoPilot = setInterval(makeAppRun, 4000);
 		hide($('#auto'));
 		show($('#auto-stop'));
 	});
+	
 	$('#auto-stop').on('click', function() {
 		clearInterval(autoPilot);
 		hide($('#auto-stop'));
 		show($('#auto'));
 	});
 })();
+	
+	//  This API also works. It's cleaner because it returns a JSON without weird characters. 
+	//  However I prefer the quotes from the other source, eventhough it involves some hacking.
+	//  I'm using this API for the codepen version of the app: http://codepen.io/vsagristalopez/full/BKaGRj?editors=0010
+
+	//	function getQuotes() {
+	// 		var url = 'https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous'
+	//   	$.ajax({
+	//       type: "POST",
+	//       url: url,
+	//       headers: {
+	// 	      "X-Mashape-Key": "w7jsuza4KZmshXfUcZOqNVTVuaMkp1LDvOfjsnNJaXdbzSvqXc",
+	// 	      "Content-Type": "application/x-www-form-urlencoded",
+	// 	      "Accept": "application/json"
+	//       },
+	//       success: 
+	//           function(response) {
+	// 	          printQuote(response);
+	// 		  },
+	//       error: 
+	//       	  function(response) {
+	// 	          printQuote(response);
+	// 		  }, 
+	//     });
+	// }    
+
+	// function printQuote (quote) {
+	//     var randomQuote = JSON.parse(quote).quote;
+	//     var author = JSON.parse(quote).author;
+	// 	   $('.clock').removeClass('animate');
+	// 	   $('#quote').text(randomQuote);
+	// 	   $('#author').text(author);
+	// 	}
