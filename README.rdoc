@@ -11,7 +11,7 @@ Instructions:
 
 - Browse to http://localhost:3000/
 
-- Use the Quote button ('') to request another quote, or the autopilot to set the automatic mode. You can tweet a code if you like it too.
+- Use the Quote button ('') to request another quote, or the autopilot to set the automatic mode. You can also tweet a code if you like.
 
 - Enjoy the app!
 
