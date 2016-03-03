@@ -1,27 +1,20 @@
-== README
+Welcome to Quote Machine Generator:
+This app is a front end project that prints quotes from an API (from famous movies, philosophers, historical quotes, etc.) It also changes the color with an animation every time the API returns a new quote. You can set the auto pilot and relax reading some quotes.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Instructions:
 
-Things you may want to cover:
+- Clone the repo
 
-* Ruby version
+- CD to the app directory
 
-* System dependencies
+- Run bundle install
 
-* Configuration
+- Browse to http://localhost:3000/
 
-* Database creation
+- Enjoy the app!
 
-* Database initialization
+* You can also find it in codepen at http://codepen.io/vsagristalopez/full/BKaGRj?editors=0110
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
 
 
 Please feel free to use a different markup language if you do not plan to run
