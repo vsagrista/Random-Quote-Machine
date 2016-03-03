@@ -16,12 +16,9 @@
 // Place all the styles related to the random_quotes controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-
 .body {
 	background: rgb(182, 255, 255);
 }
-
-
 
 .centered {
 	  font-family: "Dancing Script";

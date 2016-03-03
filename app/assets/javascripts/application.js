@@ -17,121 +17,125 @@
 //= require turbolinks
 //= require_tree .
 
-$(function () {	
-	
-	function getQuotes() {
-		$.getJSON("http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=40", 
-			function(response) {
-				printQuote(response);
-			}
-		);
-	}
-	
-	function printQuote (quotes) {
-		var randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-		var quote = randomQuote.content.slice(3,randomQuote.content.length-5);  // the string comes with html <p> tags 
-		var author = randomQuote.title;
-		if(quote.indexOf('&#82') != -1){  // Some quotes have unwanted characters
-			quote = cleanQuoteFromCharSigns(quote);
-		}
-		$('.clock').removeClass('animate');
-		$('#quote').text(quote);
-		$('#author').text(author);
-	}
+$(function() {
 
-	function cleanQuoteFromCharSigns(quote) { // removes the unwanted characters returned by the API
-		var firstChunk = quote.split('&#82')[0];
-		var secondChunk = quote.split('&#82')[1].split(';');
-		switch (secondChunk[0]) {
-			case '11':
-				secondChunk.shift();
-				return firstChunk + ' ' + secondChunk; 
-			case '17':
-				secondChunk.shift();
-				return firstChunk + "'" + secondChunk; 
-			case '30':
-				secondChunk.shift();
-				return firstChunk + '' + secondChunk; 
-		}		
-	}
+  function wrapTweet() {
+    var tweeterUrl = 'https://twitter.com/intent/tweet?text=';
+    var quote = $('#quote').text();
+    var author = ' - ' + $('#author').text() + ' - ';
+    var codingHashtags = 'codingquotes,freecodecamp';
+    var tweet = makeItTweetable(quote, author, codingHashtags);
+    $('#tweet-content').attr('href', tweeterUrl + tweet);
+  }
 
-	function assignColors ($domElement, colors) {
-		var background = 'rgb(';
-		for(var i = 0; i < colors.length; i++){
-			background += (colors[i]+50) + ',';
-		}
-		background = background.slice(0, -1) + ')';
-		$domElement.animate({backgroundColor : background}, 500);
-		$domElement.animate({'border' : background}, 500);
-	}
+  function makeItTweetable(quote, author, codingHashtags) {
+    if (quote.length + author.length + codingHashtags.length + 2 > 140) {
+      var quoteAllowance = 110 - author.length; // codingHashtag.lengh is 26 plus 3 ...
+      var toA = quote.slice(0, quoteAllowance).split(' '); // remove last word, in case it's been cut
+      toA.pop();
+      return toA.join(' ') + '...' + author + '&hashtags=' + codingHashtags;
+    } else {
+      return quote + author + '&hashtags=' + codingHashtags;
+    }
+  }
 
-	function makeAppRun () {
-		$('.clock').addClass('animate');
-		setTimeout(function () {getQuotes()},2000);
-		var backgroundColors = Array.apply(null,Array(3)).map(function(number){return Math.floor(Math.random() * 800)});
-			assignColors($('body'), backgroundColors);
-			assignColors($('.color-change'), backgroundColors);	
-	}
+  function getQuotes(mode) {
+    var url =
+      'https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous';
+    $.ajax({
+      type: "POST",
+      url: url,
+      headers: {
+        "X-Mashape-Key": "w7jsuza4KZmshXfUcZOqNVTVuaMkp1LDvOfjsnNJaXdbzSvqXc",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json"
+      },
+      success: function(response) {
+        printQuote(response, mode);
+      },
+      error: function(response) {
+        printQuote(response);
+      },
+    });
+  }
 
-	function hide ($domElement) {
-		$domElement.addClass('hidden');
-	}
+  function printQuote(quote, mode) {
+    var randomQuote = JSON.parse(quote).quote;
+    var author = JSON.parse(quote).author;
+    $('#quote').text(randomQuote);
+    $('#author').text(author);
+    wrapTweet();
+    prepareColors();
+    if (mode) stopSpinner();
+  }
 
-	function show ($domElement) {
-		$domElement.removeClass('hidden');
-	}
+  function prepareColors() {
+    var backgroundColors = Array.apply(null, Array(3)).map(function(number) {
+      return Math.floor(Math.random() * 800);
+    });
+    paintItPretty($('body'), backgroundColors);
+  }
 
-	var autoPilot;
+  function paintItPretty($domElement, colors) {
+    var background = 'rgb(';
+    for (var i = 0; i < colors.length; i++) {
+      background += (colors[i] + 50) + ',';
+    }
+    background = background.slice(0, -1) + ')';
+    $domElement.animate({
+      backgroundColor: background
+    }, 500);
+    $domElement.animate({
+      'border': background
+    }, 500);
+  }
 
-	$('#quote-btn').on('click', function() {
-		clearInterval(autoPilot);
-		hide($('#auto-stop'));
-		show($('#auto'));
-		makeAppRun();
-	});
+  function hide($domElement) {
+    $domElement.addClass('hidden');
+  }
 
-	$('#auto').on('click', function() {
-		autoPilot = setInterval(makeAppRun, 4000);
-		hide($('#auto'));
-		show($('#auto-stop'));
-	});
-	
-	$('#auto-stop').on('click', function() {
-		clearInterval(autoPilot);
-		hide($('#auto-stop'));
-		show($('#auto'));
-	});
+  function show($domElement) {
+    $domElement.removeClass('hidden');
+  }
+
+  function runSpinner() {
+    $('.clock').addClass('animate');
+  }
+
+  function stopSpinner() {
+    $('.clock').removeClass('animate');
+  }
+
+  function makeAppRun(mode) {
+    $('.clock').addClass('animate');
+    if (mode === 'manual') {
+      setTimeout(function() {
+        getQuotes('manual')
+      }, 2000);
+    } else {
+      getQuotes();
+    }
+  }
+
+  wrapTweet();
+  var autoPilot;
+
+  $('#quote-btn').on('click', function() {
+    clearInterval(autoPilot);
+    hide($('#auto-stop'));
+    show($('#auto'));
+    makeAppRun('manual');
+  });
+  $('#auto').on('click', function() {
+    makeAppRun();
+    autoPilot = setInterval(makeAppRun, 6000);
+    hide($('#auto'));
+    show($('#auto-stop'));
+  });
+  $('#auto-stop').on('click', function() {
+    stopSpinner();
+    clearInterval(autoPilot);
+    hide($('#auto-stop'));
+    show($('#auto'));
+  });
 })();
-	
-	//  This API also works. It's cleaner because it returns a JSON without weird characters. 
-	//  However I prefer the quotes from the other source, eventhough it involves some hacking.
-	//  I'm using this API for the codepen version of the app: http://codepen.io/vsagristalopez/full/BKaGRj?editors=0010
-
-	//	function getQuotes() {
-	// 		var url = 'https://andruxnet-random-famous-quotes.p.mashape.com/?cat=famous'
-	//   	$.ajax({
-	//       type: "POST",
-	//       url: url,
-	//       headers: {
-	// 	      "X-Mashape-Key": "w7jsuza4KZmshXfUcZOqNVTVuaMkp1LDvOfjsnNJaXdbzSvqXc",
-	// 	      "Content-Type": "application/x-www-form-urlencoded",
-	// 	      "Accept": "application/json"
-	//       },
-	//       success: 
-	//           function(response) {
-	// 	          printQuote(response);
-	// 		  },
-	//       error: 
-	//       	  function(response) {
-	// 	          printQuote(response);
-	// 		  }, 
-	//     });
-	// }    
-
-	// function printQuote (quote) {
-	//     var randomQuote = JSON.parse(quote).quote;
-	//     var author = JSON.parse(quote).author;
-	// 	   $('.clock').removeClass('animate');
-	// 	   $('#quote').text(randomQuote);
-	// 	   $('#author').text(author);
-	// 	}
