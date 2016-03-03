@@ -11,6 +11,8 @@ Instructions:
 
 - Browse to http://localhost:3000/
 
+- Use the Quote button ('') to request another quote, or the autopilot to set the automatic mode. You can tweet a code if you like it too.
+
 - Enjoy the app!
 
 * You can also find it in codepen at http://codepen.io/vsagristalopez/full/BKaGRj?editors=0110
